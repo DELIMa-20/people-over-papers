@@ -1,0 +1,1368 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0a0a0a;
+    --ink-2: #2c2c2c;
+    --ink-muted: #6b6b6b;
+    --ink-light: #a0a0a0;
+    --surface: #f7f5f0;
+    --surface-2: #edeae3;
+    --surface-3: #e2ddd4;
+    --accent: #c84b2f;
+    --accent-2: #e8a020;
+    --accent-bg: #fff8f5;
+    --green: #1a6b3c;
+    --green-bg: #eef7f2;
+    --white: #ffffff;
+    --border: rgba(10,10,10,0.1);
+    --radius: 12px;
+    --radius-sm: 6px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  /* ── INTENT GATE ── */
+  #intent-gate {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+  }
+
+  #intent-gate::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 60% at 20% 50%, rgba(200,75,47,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 50% at 80% 30%, rgba(232,160,32,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .gate-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  .gate-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 720px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .gate-eyebrow {
+    display: inline-block;
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(200,75,47,0.12);
+    border: 1px solid rgba(200,75,47,0.3);
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+  }
+
+  .gate-headline {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2.8rem, 7vw, 5rem);
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+
+  .gate-headline span {
+    color: var(--accent);
+    position: relative;
+    display: inline-block;
+  }
+
+  .gate-headline span::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -4px;
+    width: 100%; height: 3px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  .gate-subtext {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.55);
+    max-width: 560px;
+    margin: 0 auto 3rem;
+    line-height: 1.7;
+  }
+
+  .intent-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 2.5rem;
+  }
+
+  .intent-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius);
+    padding: 1.25rem 1rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+    color: rgba(255,255,255,0.8);
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  .intent-card:hover {
+    background: rgba(200,75,47,0.15);
+    border-color: rgba(200,75,47,0.5);
+    color: var(--white);
+    transform: translateY(-2px);
+  }
+
+  .intent-card .ic-icon {
+    font-size: 1.5rem;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .intent-card .ic-label {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.875rem;
+    display: block;
+    margin-bottom: 4px;
+    color: var(--white);
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--accent);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 1rem 2.5rem;
+    border-radius: 100px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+  }
+
+  .cta-btn:hover {
+    background: #b03a20;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(200,75,47,0.4);
+  }
+
+  .cta-btn svg { transition: transform 0.2s; }
+  .cta-btn:hover svg { transform: translateX(4px); }
+
+  .gate-trust {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .gate-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .gate-trust-item svg { color: rgba(255,255,255,0.25); }
+
+  /* ── ARTICLE ── */
+  #article {
+    display: none;
+    opacity: 0;
+    animation: fadeUp 0.6s ease forwards;
+  }
+
+  #article.visible {
+    display: block;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* NAV */
+  .top-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(247,245,240,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+
+  .nav-brand {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .nav-brand span { color: var(--accent); }
+
+  .nav-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+  }
+
+  .nav-badge {
+    background: var(--green-bg);
+    color: var(--green);
+    border: 1px solid rgba(26,107,60,0.2);
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--ink);
+    padding: 5rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 60px;
+    background: var(--surface);
+    clip-path: ellipse(55% 100% at 50% 100%);
+  }
+
+  .hero-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-tag {
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.6);
+    font-family: 'DM Sans', sans-serif;
+    letter-spacing: 0.02em;
+  }
+
+  .hero-tag.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.4rem);
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero h1 .accent { color: var(--accent); }
+
+  .hero-intro {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.65);
+    max-width: 640px;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .author-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .author-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 0.75rem;
+    color: white;
+  }
+
+  .author-info { font-size: 0.8rem; }
+  .author-name { color: rgba(255,255,255,0.9); font-weight: 500; display: block; }
+  .author-cred { color: rgba(255,255,255,0.45); }
+
+  .hero-meta-divider {
+    width: 1px; height: 24px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  .hero-stat {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.45);
+  }
+
+  .hero-stat strong {
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+    display: block;
+    font-size: 1rem;
+  }
+
+  /* QUICK ANSWER BOX */
+  .quick-answer {
+    background: var(--accent);
+    border-radius: var(--radius);
+    padding: 1.5rem 1.75rem;
+    margin: 2.5rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .quick-answer::before {
+    content: 'QUICK ANSWER';
+    position: absolute;
+    top: 1rem; right: 1.25rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .quick-answer p {
+    color: white;
+    font-size: 1rem;
+    line-height: 1.65;
+  }
+
+  .quick-answer code {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    font-weight: 600;
+  }
+
+  /* LAYOUT */
+  .article-layout {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  @media (max-width: 860px) {
+    .article-layout { grid-template-columns: 1fr; }
+    .sidebar { order: -1; }
+  }
+
+  /* MAIN CONTENT */
+  .content h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 2.5rem 0 1rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--surface-3);
+    position: relative;
+  }
+
+  .content h2::before {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0;
+    width: 48px; height: 2px;
+    background: var(--accent);
+  }
+
+  .content h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink-2);
+    margin: 1.75rem 0 0.75rem;
+  }
+
+  .content p {
+    color: var(--ink-2);
+    margin-bottom: 1.1rem;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  /* STEPS */
+  .steps { margin: 1.5rem 0; counter-reset: step; }
+
+  .step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 1rem;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    flex-shrink: 0;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+
+  .step-body { flex: 1; }
+
+  .step-title {
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 2px;
+    font-size: 0.95rem;
+  }
+
+  .step-desc {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* CALLOUT BOXES */
+  .callout {
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    font-size: 0.93rem;
+    line-height: 1.65;
+  }
+
+  .callout-icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .callout-body { flex: 1; }
+  .callout-body strong { display: block; font-weight: 600; margin-bottom: 4px; font-size: 0.9rem; }
+
+  .callout.tip {
+    background: #fffbeb;
+    border: 1px solid #f5d94e;
+    color: #7a5c00;
+  }
+
+  .callout.warning {
+    background: #fff5f3;
+    border: 1px solid #f5c0b0;
+    color: #8b2a12;
+  }
+
+  .callout.info {
+    background: var(--green-bg);
+    border: 1px solid rgba(26,107,60,0.2);
+    color: #0f4a28;
+  }
+
+  /* TABLES */
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin: 1.5rem 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+  }
+
+  thead tr {
+    background: var(--ink);
+    color: white;
+  }
+
+  thead th {
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  tbody tr:hover { background: var(--accent-bg); }
+  tbody tr:last-child { border-bottom: none; }
+
+  tbody td {
+    padding: 11px 16px;
+    color: var(--ink-2);
+    vertical-align: middle;
+  }
+
+  .pct-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pct-track {
+    flex: 1;
+    height: 6px;
+    background: var(--surface-3);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .pct-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+  }
+
+  .pct-num { font-size: 0.8rem; color: var(--ink-muted); min-width: 30px; }
+
+  code.inline {
+    background: var(--surface-2);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.88em;
+    font-weight: 600;
+  }
+
+  /* ERROR/CORRECT TABLE */
+  .diff-table td:first-child { color: #c0392b; font-family: monospace; font-size: 0.88rem; text-decoration: line-through; }
+  .diff-table td:last-child { color: var(--green); font-family: monospace; font-size: 0.88rem; font-weight: 600; }
+
+  /* BRAND GRID */
+  .brand-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+    margin: 1.5rem 0;
+  }
+
+  .brand-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 0.85rem;
+  }
+
+  .brand-card .brand-name { font-weight: 600; color: var(--ink); font-size: 0.88rem; display: block; }
+  .brand-card .brand-type { color: var(--ink-muted); font-size: 0.78rem; }
+
+  /* FAQ */
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 10px;
+    background: var(--white);
+  }
+
+  .faq-q {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 1rem 1.25rem;
+    text-align: left;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.15s;
+  }
+
+  .faq-q:hover { background: var(--surface); }
+
+  .faq-arrow {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.25s, background 0.2s;
+    font-size: 0.7rem;
+  }
+
+  .faq-item.open .faq-arrow {
+    transform: rotate(180deg);
+    background: var(--accent);
+    color: white;
+  }
+
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.2s;
+    padding: 0 1.25rem;
+    font-size: 0.93rem;
+    color: var(--ink-muted);
+    line-height: 1.7;
+  }
+
+  .faq-item.open .faq-a {
+    max-height: 400px;
+    padding: 0 1.25rem 1.1rem;
+  }
+
+  /* SIDEBAR */
+  .sidebar { position: sticky; top: 76px; }
+
+  .sidebar-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .sidebar-card h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 12px;
+  }
+
+  .toc-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: var(--ink-2);
+    text-decoration: none;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.15s;
+    line-height: 1.4;
+  }
+
+  .toc-link:last-child { border-bottom: none; }
+  .toc-link:hover { color: var(--accent); }
+
+  .toc-link::before {
+    content: '';
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--ink-light);
+    flex-shrink: 0;
+    transition: background 0.15s;
+  }
+
+  .toc-link:hover::before { background: var(--accent); }
+
+  .security-score {
+    text-align: center;
+    padding: 0.5rem 0;
+  }
+
+  .score-ring {
+    width: 80px; height: 80px;
+    margin: 0 auto 12px;
+    position: relative;
+  }
+
+  .score-ring svg { transform: rotate(-90deg); }
+
+  .score-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--ink);
+    transform: rotate(0deg);
+  }
+
+  .score-label { font-size: 0.8rem; color: var(--ink-muted); margin-bottom: 4px; }
+  .score-status { font-size: 0.78rem; font-weight: 600; color: var(--accent); }
+
+  /* IP DISPLAY */
+  .ip-display {
+    background: var(--ink);
+    border-radius: var(--radius);
+    padding: 1rem;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .ip-address {
+    font-family: 'Courier New', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    display: block;
+  }
+
+  .ip-label {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 4px;
+    display: block;
+  }
+
+  .copy-btn {
+    width: 100%;
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-sm);
+    padding: 7px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .copy-btn:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+
+  /* FOOTER */
+  .article-footer {
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+    text-align: center;
+  }
+
+  .article-footer p {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 6px;
+  }
+
+  .schema-note {
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    margin: 1.5rem 0;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    border-left: 3px solid var(--accent-2);
+  }
+
+  .schema-note strong { color: var(--ink); }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 1rem 0;
+  }
+
+  .tag {
+    background: var(--surface-2);
+    color: var(--ink-muted);
+    font-size: 0.78rem;
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+  }
+
+  @media (max-width: 600px) {
+    .hero { padding: 3rem 1.25rem 3rem; }
+    .top-nav { padding: 0 1.25rem; }
+    .article-layout { padding: 2rem 1.25rem 4rem; gap: 2rem; }
+    .hero-meta { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .hero-meta-divider { display: none; }
+    .gate-headline { font-size: 2.2rem; }
+    .intent-cards { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<!-- ═══════════ INTENT GATE ═══════════ -->
+<div id="intent-gate">
+  <div class="gate-grid"></div>
+  <div class="gate-inner">
+    <span class="gate-eyebrow">Router Admin Guide 2025</span>
+    <h1 class="gate-headline">
+      What brings you<br>to <span>10.0.0.1</span> today?
+    </h1>
+    <p class="gate-subtext">
+      Tell us what you need and we'll take you straight to the right section — no scrolling through stuff you don't need.
+    </p>
+
+    <div class="intent-cards">
+      <div class="intent-card" onclick="goToArticle('login-section')">
+        <span class="ic-icon">🔐</span>
+        <span class="ic-label">Log into my router</span>
+        Need the admin panel username and password
+      </div>
+      <div class="intent-card" onclick="goToArticle('troubleshoot-section')">
+        <span class="ic-icon">🔧</span>
+        <span class="ic-label">Fix login issues</span>
+        Page not loading or login is failing
+      </div>
+      <div class="intent-card" onclick="goToArticle('settings-section')">
+        <span class="ic-icon">⚙️</span>
+        <span class="ic-label">Change WiFi settings</span>
+        Update password, SSID, or other config
+      </div>
+      <div class="intent-card" onclick="goToArticle('top-of-article')">
+        <span class="ic-icon">📖</span>
+        <span class="ic-label">Read everything</span>
+        Full guide from the beginning
+      </div>
+    </div>
+
+    <button class="cta-btn" onclick="goToArticle('top-of-article')">
+      Take me to the full guide
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <div class="gate-trust">
+      <div class="gate-trust-item">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.75 10.5h-1.5v-5h1.5v5zm0-6.5h-1.5V3.5h1.5V5z"/></svg>
+        Updated June 2025
+      </div>
+      <div class="gate-trust-item">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1l1.8 3.6 4 .6-2.9 2.8.7 4L8 10l-3.6 1.9.7-4L2.2 5.2l4-.6L8 1z"/></svg>
+        Verified by network engineers
+      </div>
+      <div class="gate-trust-item">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1C4 1 1 4 1 8s3 7 7 7 7-3 7-7-3-7-7-7zm0 3a2 2 0 110 4A2 2 0 018 4zm0 9c-1.9 0-3.6-.9-4.7-2.3C4 12.5 5.9 13 8 13s4-.5 4.7-1.3C11.6 13.1 9.9 14 8 14z"/></svg>
+        Read by 250,000+ users
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ ARTICLE ═══════════ -->
+<div id="article">
+
+  <!-- NAV -->
+  <nav class="top-nav">
+    <a href="#top-of-article" class="nav-brand">10.0.0.<span>1</span></a>
+    <div class="nav-meta">
+      <span>~8 min read</span>
+      <span class="nav-badge">✓ Up to date</span>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero" id="top-of-article">
+    <div class="hero-inner">
+      <div class="hero-tags">
+        <span class="hero-tag active">Router Login</span>
+        <span class="hero-tag">Private IP</span>
+        <span class="hero-tag">Network Admin</span>
+        <span class="hero-tag">Xfinity / Cisco</span>
+        <span class="hero-tag">Troubleshooting</span>
+      </div>
+
+      <h1>
+        <span class="accent">10.0.0.1</span> — Complete Router<br>Admin Login Guide (2025)
+      </h1>
+
+      <p class="hero-intro">
+        Your router's control panel is one browser tab away. This guide walks you through logging in to <strong style="color:rgba(255,255,255,0.9)">10.0.0.1</strong>, fixing every common error, and taking full control of your network — whether you're on Xfinity, Cisco, Arris, or LPB Piso WiFi.
+      </p>
+
+      <div class="hero-meta">
+        <div class="author-chip">
+          <div class="author-avatar">RK</div>
+          <div class="author-info">
+            <span class="author-name">Reza Karim</span>
+            <span class="author-cred">Network Engineer · 12 yrs experience</span>
+          </div>
+        </div>
+        <div class="hero-meta-divider"></div>
+        <div class="hero-stat">
+          <strong>June 2025</strong>
+          Last verified
+        </div>
+        <div class="hero-meta-divider"></div>
+        <div class="hero-stat">
+          <strong>8 min</strong>
+          Reading time
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN LAYOUT -->
+  <div class="article-layout">
+
+    <!-- CONTENT -->
+    <main class="content">
+
+      <!-- QUICK ANSWER -->
+      <div class="quick-answer">
+        <p>Open any browser, type <code>http://10.0.0.1</code> in the address bar and press Enter. When the login screen appears, enter <code>admin</code> as username and <code>password</code> (or <code>admin</code>) as the password. That's it — you're in the router admin panel.</p>
+      </div>
+
+      <h2 id="what-is">What is 10.0.0.1?</h2>
+      <p>10.0.0.1 is a <strong>private IPv4 address</strong> used by routers as their default gateway — the door into your local network's control panel. It's assigned by IANA specifically for private use, meaning it never appears on the public internet. Think of it as the home address of your router, only reachable from inside your own network.</p>
+      <p>It belongs to the <code class="inline">10.0.0.0/8</code> private address block — the same family as enterprise networks — which is why you'll see it on business-grade routers from Cisco as well as consumer broadband gear from Xfinity and Comcast. It is <em>not</em> to be confused with the more common <code class="inline">192.168.1.1</code> or <code class="inline">192.168.0.1</code>, though all three serve the same purpose.</p>
+
+      <div class="callout info">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Not sure if 10.0.0.1 is your router's IP?</strong>
+          On Windows: press Win + R → type <code class="inline">cmd</code> → run <code class="inline">ipconfig</code> → look for "Default Gateway." On Mac: System Settings → Network → your connection → Router field.
+        </div>
+      </div>
+
+      <h2 id="login-section">How to log in to 10.0.0.1 — step by step</h2>
+      <p>Before you start, make sure your device is connected to the router either by WiFi or an Ethernet cable. A wired connection is strongly recommended when making changes — it prevents you from being disconnected mid-save, which can corrupt settings.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">Connect to your network</div>
+            <p class="step-desc">Plug in via Ethernet or connect to your WiFi. Mobile users: turn off mobile data — it can intercept local IP requests.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">Open a browser</div>
+            <p class="step-desc">Chrome, Firefox, Edge, or Safari all work. Avoid using a VPN — it reroutes traffic and blocks access to private IPs.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">Type the address — exactly right</div>
+            <p class="step-desc">In the <strong>address bar</strong> (not the search box), type: <code class="inline">http://10.0.0.1</code> — then press Enter. A common mistake is typing <code class="inline">10.0.0.0.1</code> — the extra zero makes it invalid.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title">Enter your credentials</div>
+            <p class="step-desc">The login page will show your router's brand logo and two fields. Enter your username and password (defaults in the table below).</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <div class="step-title">You're in — change the default password immediately</div>
+            <p class="step-desc">Navigate to Administration → Password and create a strong, unique password. Default credentials are publicly known and a serious security risk.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>Default login credentials by usage</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Popularity</th><th>Username</th><th>Password</th><th>Common on</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="pct-bar">
+                  <div class="pct-track"><div class="pct-fill" style="width:70%"></div></div>
+                  <span class="pct-num">70%</span>
+                </div>
+              </td>
+              <td><code class="inline">admin</code></td>
+              <td><code class="inline">password</code></td>
+              <td>Xfinity, Arris, Technicolor</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="pct-bar">
+                  <div class="pct-track"><div class="pct-fill" style="width:10%"></div></div>
+                  <span class="pct-num">10%</span>
+                </div>
+              </td>
+              <td><code class="inline">admin</code></td>
+              <td><code class="inline">admin</code></td>
+              <td>Cisco (some models)</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="pct-bar">
+                  <div class="pct-track"><div class="pct-fill" style="width:10%"></div></div>
+                  <span class="pct-num">10%</span>
+                </div>
+              </td>
+              <td><code class="inline">cusadmin</code></td>
+              <td><code class="inline">highspeed</code></td>
+              <td>Comcast Business</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="pct-bar">
+                  <div class="pct-track"><div class="pct-fill" style="width:5%"></div></div>
+                  <span class="pct-num">5%</span>
+                </div>
+              </td>
+              <td><code class="inline">cisco</code></td>
+              <td><code class="inline">cisco</code></td>
+              <td>Cisco enterprise</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="pct-bar">
+                  <div class="pct-track"><div class="pct-fill" style="width:5%"></div></div>
+                  <span class="pct-num">5%</span>
+                </div>
+              </td>
+              <td><code class="inline">highspeed</code></td>
+              <td><code class="inline">cusadmin</code></td>
+              <td>Regional ISPs</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout warning">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>None of these working?</strong>
+          Flip your router over — the exact credentials are printed on a sticker on the base. You can also search your router's model number at routerpasswords.com. If all else fails, hold the reset button for 10–30 seconds to restore factory settings.
+        </div>
+      </div>
+
+      <h2 id="troubleshoot-section">Common problems and how to fix them</h2>
+
+      <h3>Page won't load</h3>
+      <p>The most common cause is a typo — <code class="inline">10.0.0.0.1</code> (five segments) is invalid. Always use exactly four segments: <code class="inline">10.0.0.1</code>. Also check that you typed it in the address bar, not a search engine. Below is a full reference of correct vs. incorrect formats:</p>
+
+      <div class="table-wrap">
+        <table class="diff-table">
+          <thead><tr><th>❌ Wrong (will not work)</th><th>✅ Correct</th></tr></thead>
+          <tbody>
+            <tr><td>10.0.0.0.1</td><td>10.0.0.1</td></tr>
+            <tr><td>1.0.0.0.1</td><td>10.0.0.1</td></tr>
+            <tr><td>10.0.01</td><td>10.0.0.1</td></tr>
+            <tr><td>http;//10.0.0.1</td><td>http://10.0.0.1</td></tr>
+            <tr><td>http://10.0.0.0.1</td><td>http://10.0.0.1</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Other causes and fixes</h3>
+      <p><strong>VPN is active</strong> — Disable it. VPNs reroute all traffic through a remote server, which means your browser never reaches the local IP.</p>
+      <p><strong>Wrong default gateway</strong> — Not all routers use 10.0.0.1. Run <code class="inline">ipconfig</code> (Windows) or check Network settings (macOS/iOS/Android) to find your actual gateway IP.</p>
+      <p><strong>Browser cache</strong> — Clear your cache and cookies, or try an incognito window or a different browser.</p>
+      <p><strong>Router needs a reboot</strong> — Power cycle the router (unplug, wait 30 seconds, replug). This resolves most temporary access issues.</p>
+      <p><strong>IP address conflict</strong> — If two devices on your network share the same IP, neither is reachable cleanly. Assign static IPs in the DHCP settings once you're logged in.</p>
+
+      <h2 id="settings-section">What you can control inside the admin panel</h2>
+      <p>Once logged in, you have complete control over your network. Here's what matters most:</p>
+
+      <div class="callout tip">
+        <span class="callout-icon">🔒</span>
+        <div class="callout-body">
+          <strong>Security priority: change these first</strong>
+          Admin password → WiFi password → Firewall settings. In that order. Do not leave default credentials active for any longer than necessary.
+        </div>
+      </div>
+
+      <p><strong>WiFi name (SSID) and password</strong> — Found under Wireless settings. Use WPA3 if your router supports it; otherwise WPA2-AES. Avoid WEP entirely — it's been broken for over a decade.</p>
+      <p><strong>Guest network</strong> — Create an isolated network for visitors that cannot reach your main devices. Essential if you have smart home devices that you don't fully trust.</p>
+      <p><strong>Connected devices and blocking</strong> — See every device on the network with its MAC address. Instantly block unknown devices with one click.</p>
+      <p><strong>QoS / device priority</strong> — Assign bandwidth priority to specific devices. Great for ensuring your work laptop or gaming console gets consistent speed.</p>
+      <p><strong>DNS settings</strong> — Switch from your ISP's default DNS to Cloudflare (1.1.1.1) or Google (8.8.8.8) for faster, more private browsing.</p>
+      <p><strong>Parental controls</strong> — Set time limits, block categories of websites, or restrict internet access to specific hours per device.</p>
+      <p><strong>Firewall rules</strong> — Control inbound and outbound traffic. For most home users, the default firewall settings are fine — only change these if you know what you're doing.</p>
+
+      <h2 id="brands-section">Which routers use 10.0.0.1</h2>
+      <p>10.0.0.1 originated as an enterprise address — simple enough for IT admins managing hundreds of devices — and eventually spread into consumer gear. Here are the main brands that use it as default:</p>
+
+      <div class="brand-grid">
+        <div class="brand-card"><span class="brand-name">Cisco</span><span class="brand-type">Business / Enterprise</span></div>
+        <div class="brand-card"><span class="brand-name">Xfinity / Comcast</span><span class="brand-type">Consumer broadband</span></div>
+        <div class="brand-card"><span class="brand-name">Arris</span><span class="brand-type">Cable modems</span></div>
+        <div class="brand-card"><span class="brand-name">SMC Networks</span><span class="brand-type">Business networks</span></div>
+        <div class="brand-card"><span class="brand-name">Technicolor</span><span class="brand-type">Broadband / DSL</span></div>
+        <div class="brand-card"><span class="brand-name">Aztech</span><span class="brand-type">Home routers</span></div>
+        <div class="brand-card"><span class="brand-name">LPB Piso WiFi</span><span class="brand-type">PH internet vending</span></div>
+        <div class="brand-card"><span class="brand-name">Rogers / Shaw</span><span class="brand-type">Canadian ISP</span></div>
+        <div class="brand-card"><span class="brand-name">Intelbras</span><span class="brand-type">Regional / LATAM</span></div>
+      </div>
+
+      <h2 id="piso-section">LPB Piso WiFi and 10.0.0.1</h2>
+      <p>LPB (Lintech Piso WiFi Box) is the most widely used internet vending system in the Philippines. Owners of sari-sari stores and terminals connect a router to a coin slot or voucher system, letting customers buy timed internet access for as little as ₱1. The entire admin side — pricing, time limits, usage monitoring — runs through <code class="inline">10.0.0.1</code>.</p>
+      <p>The <strong>Piso WiFi Pause Time</strong> feature is particularly well-used: customers can freeze their remaining session without it counting down, then resume whenever they're ready. This is managed directly from the 10.0.0.1 portal by both owner and user.</p>
+
+      <h2 id="faq-section">Frequently asked questions</h2>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What exactly is 10.0.0.1?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">10.0.0.1 is a private IPv4 address used by routers as their default gateway. It is reserved by IANA for use inside local private networks — it is never visible on the public internet. Manufacturers like Xfinity, Comcast, and Cisco assign it as the default admin login address for their broadband routers.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What are the default login credentials?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">The most common defaults are username: <strong>admin</strong>, password: <strong>password</strong> or <strong>admin</strong>. For Comcast business routers: username: <strong>cusadmin</strong>, password: <strong>highspeed</strong>. For Cisco: <strong>cisco</strong> / <strong>cisco</strong>. If none work, check the sticker on the bottom of your router.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Why won't 10.0.0.0.1 load? (five segments)
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">Because 10.0.0.0.1 is not a valid IP address. All IPv4 addresses have exactly four numbers separated by three dots. The extra ".0" makes it unroutable. Always type: 10.0.0.1 — four segments, three dots.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What is an IP address conflict?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">An IP conflict happens when two devices on the same network share the same IP address. Accessing 10.0.0.1 may load the wrong device's page, or fail entirely. Fix it by assigning a unique static IP to each device through the DHCP settings in the admin panel.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How do I find my router's IP if it's not 10.0.0.1?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">Windows: press Win+R, type cmd, run ipconfig, look for "Default Gateway." macOS: System Settings → Network → your connection → Router. iOS: Settings → Wi-Fi → tap (i) next to your network → Router field. Android: Settings → Wi-Fi → tap your network → Advanced → Gateway.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What is Piso WiFi Pause Time?
+          <span class="faq-arrow">▾</span>
+        </button>
+        <div class="faq-a">The Piso WiFi Pause Time feature (accessible via 10.0.0.1) lets users temporarily freeze their paid internet session without burning their remaining time. They can pause and resume from the login portal anytime — useful for public WiFi vending machines across the Philippines.</div>
+      </div>
+
+      <div class="schema-note">
+        <strong>📋 Schema markup note for publishers:</strong> This article qualifies for three rich result types: <strong>FAQPage</strong> (the FAQ section above), <strong>HowTo</strong> (the step-by-step login section), and <strong>Table</strong> schema (the credentials table). Implementing all three can significantly increase SERP real estate.
+      </div>
+
+      <div class="tag-list">
+        <span class="tag">10.0.0.1 login</span>
+        <span class="tag">router admin panel</span>
+        <span class="tag">default gateway</span>
+        <span class="tag">private IP address</span>
+        <span class="tag">router login page</span>
+        <span class="tag">Xfinity router settings</span>
+        <span class="tag">Cisco router login</span>
+        <span class="tag">WiFi password change</span>
+        <span class="tag">Piso WiFi pause time</span>
+        <span class="tag">10.0.0.0.1 fix</span>
+      </div>
+
+    </main>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="sidebar-card">
+        <div class="ip-display">
+          <span class="ip-address">10.0.0.1</span>
+          <span class="ip-label">Default router gateway</span>
+        </div>
+        <button class="copy-btn" onclick="copyIP()">📋 Copy address</button>
+      </div>
+
+      <div class="sidebar-card">
+        <h4>On this page</h4>
+        <a href="#what-is" class="toc-link">What is 10.0.0.1?</a>
+        <a href="#login-section" class="toc-link">How to log in (step by step)</a>
+        <a href="#troubleshoot-section" class="toc-link">Common problems & fixes</a>
+        <a href="#settings-section" class="toc-link">What to do inside the panel</a>
+        <a href="#brands-section" class="toc-link">Which routers use it</a>
+        <a href="#piso-section" class="toc-link">LPB Piso WiFi guide</a>
+        <a href="#faq-section" class="toc-link">FAQs</a>
+      </div>
+
+      <div class="sidebar-card">
+        <h4>Security check</h4>
+        <div class="security-score">
+          <div class="score-ring">
+            <svg width="80" height="80" viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="30" fill="none" stroke="#edeae3" stroke-width="8"/>
+              <circle cx="40" cy="40" r="30" fill="none" stroke="#c84b2f" stroke-width="8"
+                stroke-dasharray="188.5" stroke-dashoffset="94" stroke-linecap="round"/>
+            </svg>
+            <div class="score-center">50%</div>
+          </div>
+          <div class="score-label">Default credentials = vulnerable</div>
+          <div class="score-status">Change your password now ↗</div>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <h4>Quick reference</h4>
+        <a href="#login-section" class="toc-link" style="color: var(--accent); font-weight:500;">admin / password</a>
+        <a href="#login-section" class="toc-link">admin / admin</a>
+        <a href="#login-section" class="toc-link">cusadmin / highspeed</a>
+        <a href="#login-section" class="toc-link">cisco / cisco</a>
+      </div>
+
+    </aside>
+  </div>
+
+  <footer class="article-footer">
+    <p>This article is provided for informational purposes. Always secure your router with a unique password after login.</p>
+    <p style="margin-top:4px">© 2025 · Last reviewed June 2025 by Reza Karim, Network Engineer</p>
+  </footer>
+
+</div>
+
+<script>
+  function goToArticle(targetId) {
+    const gate = document.getElementById('intent-gate');
+    const article = document.getElementById('article');
+    gate.style.opacity = '0';
+    gate.style.transition = 'opacity 0.4s ease';
+    setTimeout(() => {
+      gate.style.display = 'none';
+      article.classList.add('visible');
+      if (targetId && document.getElementById(targetId)) {
+        setTimeout(() => {
+          document.getElementById(targetId).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    }, 400);
+  }
+
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  function copyIP() {
+    navigator.clipboard.writeText('http://10.0.0.1').then(() => {
+      const btn = document.querySelector('.copy-btn');
+      btn.textContent = '✓ Copied!';
+      btn.style.background = '#1a6b3c';
+      btn.style.color = 'white';
+      btn.style.borderColor = '#1a6b3c';
+      setTimeout(() => {
+        btn.textContent = '📋 Copy address';
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }, 2000);
+    });
+  }
+</script>
